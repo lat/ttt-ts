@@ -5,9 +5,14 @@ import type { Socket } from "socket.io";
 
 const app = express();
 const httpServer = createServer(app);
+
+// Use environment variables for configuration
+const PORT = process.env.PORT || 3000;
+const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:5173";
+
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: CORS_ORIGIN,
     allowedHeaders: ["Content-Type"],
     credentials: true
   },
@@ -85,7 +90,18 @@ const getRoomId = (playerId: string): string | null => {
   return null;
 }
 
+// Basic health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
 io.on("connection", (socket) => {
+  console.log(`Player connected: ${socket.id}`);
+  
   allPlayers[socket.id] = {
     socket: socket,
     online: true,
@@ -171,6 +187,8 @@ io.on("connection", (socket) => {
         gameOver: false
       };
 
+      console.log(`Game started between ${currentPlayer.playerName} and ${opponentPlayer.playerName}`);
+
       opponentPlayer.socket.emit("opponent_found", {
         opponentName: currentPlayer.playerName,
         playerSymbol: "X"
@@ -186,6 +204,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
+    console.log(`Player disconnected: ${socket.id}`);
+    
     const player = allPlayers[socket.id];
     if (player?.opponentId) {
       // Notify opponent of disconnect
@@ -206,6 +226,8 @@ io.on("connection", (socket) => {
   });
 });
 
-httpServer.listen(3000, () => {
-  console.log("Server running on port 3000");
+httpServer.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`CORS Origin: ${CORS_ORIGIN}`);
 });

@@ -4,7 +4,8 @@ import Square from './components/Square';
 import { io } from 'socket.io-client';
 import type { Socket } from "socket.io-client";
 
-const URL = "http://localhost:3000";
+// Use environment variable for server URL, fallback to localhost for development
+const URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
 
 type Cell = number | 'X' | 'O';
 type Board = Cell[][];
@@ -65,9 +66,6 @@ const App = () => {
 
     return null;
   }
-
-  // Remove the useEffect that was causing race conditions
-  // Winner checking will now be handled by the server
 
   const takePlayerName = () => {
     const playerName = prompt("Enter your name");
