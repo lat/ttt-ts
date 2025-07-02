@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import './App.css';
 import Square from './components/Square';
 import { io } from 'socket.io-client';
@@ -23,49 +23,6 @@ const App = () => {
   const [opponentName, setOpponentName] = useState<string | null>(null);
   const [playerSymbol, setPlayerSymbol] = useState<'X' | 'O' | null>(null);
   const [winner, setWinner] = useState<string | null>(null);
-
-  const checkWin = (board: Board): string | number | null => {
-    // Check rows
-    for (let row = 0; row < board.length; row++) {
-      if (
-        board[row][0] === board[row][1] &&
-        board[row][1] === board[row][2] &&
-        (board[row][0] === 'X' || board[row][0] === 'O')
-      ) {
-        return board[row][0];
-      }
-    }
-    
-    // Check columns
-    for (let col = 0; col < board.length; col++) {
-      if (
-        board[0][col] === board[1][col] &&
-        board[1][col] === board[2][col] &&
-        (board[0][col] === 'X' || board[0][col] === 'O')
-      ) {
-        return board[0][col];
-      }
-    }
-    
-    // Check diagonals
-    if(board[0][0] === board[1][1] && board[1][1] === board[2][2] && (board[0][0] === 'X' || board[0][0] === 'O')){
-      return board[0][0]
-    }
-    if(board[0][2] === board[1][1] && board[1][1] === board[2][0] && (board[0][2] === 'X' || board[0][2] === 'O')){
-      return board[0][2];
-    }
-
-    // Check for draw
-    const isDraw = board.flat().every((cell) => {
-      return cell === 'X' || cell === 'O';
-    });
-
-    if(isDraw){
-      return 'draw';
-    }
-
-    return null;
-  }
 
   const takePlayerName = () => {
     const playerName = prompt("Enter your name");

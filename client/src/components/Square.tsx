@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import './Square.css'
 import { Socket } from 'socket.io-client';
 
