@@ -1,0 +1,13 @@
+.square{
+    width: 100px;
+    height: 100px;
+    background-color: #fff;
+}
+
+.square:hover{
+    cursor: pointer;
+}
+
+.not-allowed{
+    cursor: not-allowed !important;
+}
