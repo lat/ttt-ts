@@ -92,3 +92,11 @@ color: #000;
   height: 100vh;
 }
 
+.current-move-O{
+  background-color: lightgrey !important;
+}
+
+.current-move-X{
+  background-color: gray !important;
+
+}
